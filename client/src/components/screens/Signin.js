@@ -1,6 +1,6 @@
 import React ,{useState} from 'react'
 import "./../../App.css"
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, json, useNavigate } from 'react-router-dom'
 import M from "materialize-css"
 
 const Signin = () => {
@@ -30,6 +30,8 @@ const Signin = () => {
         M.toast({html: data.error, classes: "#c62828 red darken-3"})
               }
               else {
+                localStorage.setItem("jwt", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user))
                 M.toast({html: "signed in successfully",classes: "#43a047 green darken-1"})
                 signuptNavigation("/");
               }

@@ -23,14 +23,14 @@ router.post("/signup", (req, res) => {
   if (!name || !email || !password) {
     return res.status(422).json({
       success: false,
-      message: "Please Complete the left blanks",
+      error: "Please Complete the left blanks",
     });
   }
   return User.findOne({ email: email }).then((savedUser) => {
     if (savedUser){
       return res.status(422).json({
         success: false,
-        message: "Email Already Exist",
+        error: "Email Already Exist",
       });
     } 
     else {
@@ -72,9 +72,12 @@ router.post("/signin",  (req,res)=>{
         bcrypt.compare(password, savedUser.password).then(doMatch=>{
           if(doMatch){
             const token = jwt.sign({_id:savedUser._id}, process.env.JWT_SECRET);
+            const { _id, name, email } = savedUser;
             res.json({
               success:true,
-              token})
+              token,
+              _id,name,email
+            })
             // return res.json({
             //   success:true,
             //   message:"Signed in Successfully"

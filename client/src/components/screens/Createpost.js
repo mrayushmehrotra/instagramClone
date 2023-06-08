@@ -10,7 +10,7 @@ const Createpost = () => {
     const navigate = useNavigate();
     useEffect(()=>{
         if(url){
-        fetch("http://localhost:4000/createpost", {
+        fetch("/createpost", {
             method: "POST",
             headers:{
                 "Content-Type": "application/json",

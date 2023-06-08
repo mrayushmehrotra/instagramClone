@@ -15,7 +15,7 @@ const Signin = () => {
   
 
   const PostData = () =>{
-    fetch("http://localhost:4000/signin", {
+    fetch("/signin", {
       method: "POST",
       headers:{
         "Content-Type": "application/json"
@@ -47,7 +47,7 @@ const Signin = () => {
        <input type="text" placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)} />
        <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}  />
        <br /> <br/>
-         <button onClick={PostData} className='btn waves-effect waves-light #64b5f6 blue darken-1' >
+         <button  onClick={PostData} className='btn waves-effect waves-light #64b5f6 blue darken-1' >
             Login
          </button>
          <br /><br />

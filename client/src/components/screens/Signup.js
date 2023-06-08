@@ -17,7 +17,7 @@ const Signup = () => {
   
 
   const PostData = () =>{
-    fetch("http://localhost:4000/signup", {
+    fetch("/signup", {
       method: "POST",
       headers:{
         "Content-Type": "application/json"

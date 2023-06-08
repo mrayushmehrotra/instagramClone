@@ -6,7 +6,7 @@ const Post = mongoose.model("Post")
 const User = mongoose.model("User");
 
 
-router.get("/allpost", (req,res)=>{
+router.get("/allpost",requireLogin, (req,res)=>{
     Post.find().populate("postedBy","_id name")
     .then(posts=>{
         res.json({

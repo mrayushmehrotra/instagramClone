@@ -31,7 +31,10 @@ a{
 }
 
 .item{
-  width:30%;
+  max-width:40%;
+  max-height:40%;
+  padding:4px;
+
 }
 
 

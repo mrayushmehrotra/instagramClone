@@ -1,10 +1,9 @@
-import React ,{useState} from 'react'
+import React ,{useState, useEffect} from 'react'
 import "./../../App.css"
-import { Link, json, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import M from "materialize-css"
 
-const Signin = () => {
-  
+const Signin = () => {  
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate();
@@ -31,13 +30,33 @@ const Signin = () => {
               }
               else {
                 localStorage.setItem("jwt", data.token);
-                localStorage.setItem("user", JSON.stringify(data.user))
+                localStorage.setItem("user", JSON.stringify(data.savedUser))
                 M.toast({html: "signed in successfully",classes: "#43a047 green darken-1"})
-                signuptNavigation("/");
+                window.location.href = "/"
               }
     }).catch(e=>console.log(e))
   }
   
+  useEffect(() => {
+    removePasswordFromLocalStorage();
+  }, []);
+
+  const removePasswordFromLocalStorage = () => {
+    try {
+      const storedData = localStorage.getItem('myData');
+      if (!storedData) {
+        return; // No data in localStorage, exit function
+      }
+
+      const parsedData = JSON.parse(storedData);
+      delete parsedData.password;
+      
+      localStorage.setItem('myData', JSON.stringify(parsedData));
+     
+    } catch (error) {
+      console.error('Error removing password:', error);
+    }
+  };
   return (
     <div className='mycard'>
          <div className="card auth-card input-field">
@@ -58,6 +77,7 @@ const Signin = () => {
             </Link>
         </h6>
       </div>
+    
     </div>
   )
 }

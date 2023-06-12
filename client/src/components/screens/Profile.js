@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react'
 
 const Profile = () => {
-  const [mypics,setPics]  = useState("");
+  const userData = localStorage.getItem("user");
+  const parseData = JSON.parse(userData);
+  
+  const [mypics,setPics]  = useState([]);
   useEffect(()=>{
     fetch("/mypost", {
       headers:{
@@ -9,7 +12,9 @@ const Profile = () => {
       }
     }).then(res=>res.json())
     .then(result=>{
-     setPics(result.mypost)
+     setPics(result.myPost)
+
+  
     })
   })
   return (
@@ -31,7 +36,8 @@ const Profile = () => {
           />
         </div>
         <div>
-          <h4>Ramesh Yadav</h4>
+         
+          <h4>{parseData.name || null}</h4>
           <div style={{
             display:"flex",
             justifyContent: "space-between",
@@ -45,11 +51,11 @@ const Profile = () => {
       
       </div>
       <div className="gallery">
-      {
-        mypics.map(item=>{
-          <img className="item" src={item.photo} alt={item.title} />
-        })
-      }
+      <div>
+      {mypics.map((item) => (
+        <img className='item' src={item.photo} alt={item.title} key={item._id} />
+      ))}
+    </div>
  
       </div>
     </div>

@@ -76,7 +76,7 @@ router.post("/signin",  (req,res)=>{
             res.json({
               success:true,
               token,
-              _id,name,email
+              savedUser
             })
             // return res.json({
             //   success:true,

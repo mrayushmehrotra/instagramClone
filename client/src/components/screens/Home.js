@@ -11,7 +11,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
+        
          setData(result.posts);
       });
   }, []);
@@ -24,7 +24,7 @@ const Home = () => {
          
             <h5>{item.postedBy.name}</h5>
             <div className="card-image">
-              <img src={item.photo} />
+              <img src={item.photo} alt="photo" />
             </div>
             <div className="card-content">
               <i className="material-icons" style={{ color: "red" }}>

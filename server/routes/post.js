@@ -54,4 +54,41 @@ router.get("/mypost",requireLogin, (req,res)=>{
     .catch(err=>{console.log(err)})
 })
 
+
+router.put("/like",requireLogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId, {
+        $push:{likes:req.user._id}
+    }, {
+        new:true
+    }).then(result=>{
+        return res.json(result);
+    }).catch((err)=>{
+        return res.status(422).json({
+            success:false,
+            message:"Failed To Like",
+            err
+        })
+    })
+})
+
+router.put("/unlike",requireLogin, (req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId, {
+        $pull:{likes:req.user._id}
+    }, {
+        new:true
+    }).then(result=>{
+        return res.json(result);
+    }).catch(err=>{
+        return res.status(422).json({
+            success:false,
+            message: "Failed To Unlike",
+            err
+        })
+    })
+
+})
+
+
+
+
 module.exports = router

@@ -37,13 +37,13 @@ const Signin = () => {
     }).catch(e=>console.log(e))
   }
   
-  useEffect(() => {
+   useEffect(() => {
     removePasswordFromLocalStorage();
   }, []);
 
   const removePasswordFromLocalStorage = () => {
     try {
-      const storedData = localStorage.getItem('myData');
+      const storedData = localStorage.getItem('user');
       if (!storedData) {
         return; // No data in localStorage, exit function
       }
@@ -51,7 +51,7 @@ const Signin = () => {
       const parsedData = JSON.parse(storedData);
       delete parsedData.password;
       
-      localStorage.setItem('myData', JSON.stringify(parsedData));
+      localStorage.setItem('user', JSON.stringify(parsedData));
      
     } catch (error) {
       console.error('Error removing password:', error);

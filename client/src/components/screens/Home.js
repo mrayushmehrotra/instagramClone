@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import M from "materialize-css"
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -11,66 +12,99 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result)        
-         setData(result.posts);
+        console.log(result);
+        setData(result.posts);
       });
   }, []);
 
   const likePost = (id) => {
-
     fetch("/like", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("jwt")
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
       body: JSON.stringify({
-        postId: id
+        postId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const newData = data.map((item) => {
+          if (item._id === result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData)
       })
-    }).then(res => res.json()).then(result => {
-      const newData = data.map(item => {
-        if (item._id === result._id) {
-          return result;
-        } else {
-          return item;
-        }
-      });
-      // Use the updated newData variable here or set it to the state if applicable
-    }).catch(err => console.log(err));
+      .catch((err) => console.log(err));
+  };
+
+  const unlikePost = (id) => {
+    fetch("/unlike", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        postId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const newData = data.map((item) => {
+          if (item._id === result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+      })
+      .catch((err) => console.log(err));
+  }
+  const makeComment = (text, postId) => {
+    fetch("/comment", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        postId: postId,
+        text: text,
+      }),
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log(result);
+        const newData = data.map(item => {
+          if (item._id === result._id) {
+          
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+      })
+      .catch(err => console.log(err));
   };
   
-const unlikePost = (id) =>{
+  
+  const jwtWhileLogin = localStorage.getItem("user");
+  const parseData = JSON.parse(jwtWhileLogin);
+  const userId = parseData._id;
 
-  fetch("/unlike", {
-    method:"PUT",
-    headers:{
-      "Content-Type":"application/json",
-      "Authorization":"Bearer " + localStorage.getItem("jwt")
-    },
-    body:JSON.stringify({
-      postId:id
-    })
-  }).then(res=>res.json()).then(result=>{
-    const newData = data.map(item=>{
-      if(item._id ===result._id){
-        return result
-      } else {
-        return item
-      }
-    })
-    setData(newData)
-  }).catch(err=>console.log(err))
-}
-const jwtWhileLogin = localStorage.getItem("user")
-const parseData = JSON.parse(jwtWhileLogin)
-const userId = parseData._id
-
+  
   return (
     <div className="home">
       {data.map((item) => {
         return (
-          <div className="card home-card" key={item.postedBy._id} >
-         
+          <div className="card home-card" key={item.postedBy._id}>
             <h5>{item.postedBy.name}</h5>
             <div className="card-image">
               <img src={item.photo} alt="photo" />
@@ -79,17 +113,35 @@ const userId = parseData._id
               <i className="material-icons" style={{ color: "red" }}>
                 favorite
               </i>
-            
-              {item.likes.includes(userId)
-              ? <button onClick={()=> unlikePost(item._id)}><i  className="material-icons">thumb_down</i></button>
-              : 
-              <button onClick={() => likePost(item._id)}><i className="material-icons">thumb_up</i></button>    
-              }
-              
+
+              {item.likes.includes(userId) ? (
+                <button onClick={() => unlikePost(item._id)}>
+                  <i className="material-icons">thumb_down</i>
+                </button>
+              ) : (
+                <button onClick={() => likePost(item._id)}>
+                  <i className="material-icons">thumb_up</i>
+                </button>
+              )}
+
               <h6>{item.likes.length} Likes</h6>
               <h6>{item.title}</h6>
               <p>{item.body}</p>
-              <input type="text" placeholder="add Comment" />
+              {
+                item.comment.map(records=>{
+                  return <h6><span style={{fontWeight:"500"}}>{records.postedBy.name}:</span>
+                  {records.text}</h6>
+                })
+              }
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                 makeComment(e.target[0].value, item._id)
+                }}
+              >
+                <input type="text" placeholder="add Comment" />
+                <button type="submit">Submit</button>
+              </form>
             </div>
           </div>
         );
@@ -97,10 +149,5 @@ const userId = parseData._id
     </div>
   );
 };
-
-
-
-
-
 
 export default Home;

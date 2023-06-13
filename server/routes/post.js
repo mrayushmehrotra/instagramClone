@@ -80,15 +80,39 @@ router.put("/unlike",requireLogin, (req,res)=>{
         return res.json(result);
     }).catch(err=>{
         return res.status(422).json({
-            success:false,
-            message: "Failed To Unlike",
             err
         })
     })
 
 })
 
-
+router.post("/comment", requireLogin, (req,res)=>{
+    const comment = {
+        text:req.body.text,
+        postedBy:req.user._id
+    }
+    console.log(comment)
+    const comment2 = String(comment)
+    console.log(comment2)
+    Post.findByIdAndUpdate(req.body.postId, {
+        $push: { comment: comment2 }
+      }, {
+        new: true
+      }).populate("comment.postedBy", "_id name")
+    .then(result=>{
+        console.log(req.user.postId)
+        return res.status(201).json({
+            success:true,
+            result
+            
+        });
+    }).catch(err=>{
+        return res.status(422).json({
+            err,
+            message:"Nhi hua bhadwe"
+        })
+    })
+})
 
 
 module.exports = router

@@ -4,8 +4,10 @@ const app = express();
 const connectDB = require("./dataBase");
 connectDB(process.env.DB);
 app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 const cors = require("cors");
 app.use(cors())
+
 
 require("./models/postModel");
 require("./models/user");

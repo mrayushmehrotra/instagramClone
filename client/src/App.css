@@ -49,3 +49,14 @@ a{
   right:20px !important;
   left:auto !important;
 }
+
+.deleteIcon{
+  text-align:right;
+  float:right;
+  font-size:40px !important;
+  
+}
+
+.deleteIcon:hover{
+  color:rgb(39, 174, 228) !important;
+}

@@ -77,7 +77,7 @@ const Home = () => {
         postId: postId,
         text: text,
       }),
-    })
+    }).then(console.log(postId, text))
       .then(res => res.json())
       .then(result => {
         console.log(result);
@@ -90,6 +90,7 @@ const Home = () => {
           }
         });
         setData(newData);
+        console.log(newData)
       })
       .catch(err => console.log(err));
   };
@@ -104,8 +105,10 @@ const Home = () => {
     <div className="home">
       {data.map((item) => {
         return (
-          <div className="card home-card" key={item.postedBy._id}>
-            <h5>{item.postedBy.name}</h5>
+          <div className="card home-card" key={item._id}>
+            <h5>{item.postedBy.name} <span>  <i className="material-icons delete-icon deleteIcon">delete</i></span></h5> 
+          
+
             <div className="card-image">
               <img src={item.photo} alt="photo" />
             </div>

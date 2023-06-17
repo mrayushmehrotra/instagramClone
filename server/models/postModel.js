@@ -17,18 +17,20 @@ const postSchema = new mongoose.Schema({
     },
     likes:[{
         type:ObjectId,ref:"user"
-    }],
-    comment: { 
-        type:String,
-        postedBy:{
-            type:ObjectId,ref:"user"
-        }
-        },
+    }],    
+    
     postedBy:{
         type:ObjectId || "User Not Found",
         ref:"User"
 
+    },
+   comment:[{
+  
+    type:{type: String},
+    postedBy:{
+        type:ObjectId,ref:"User"
     }
+   }]
 })
 
 mongoose.model("Post", postSchema);

@@ -86,33 +86,48 @@ router.put("/unlike",requireLogin, (req,res)=>{
 
 })
 
-router.post("/comment", requireLogin, (req,res)=>{
-    const comment = {
-        text:req.body.text,
-        postedBy:req.user._id
-    }
-    console.log(comment)
-    const comment2 = String(comment)
-    console.log(comment2)
-    Post.findByIdAndUpdate(req.body.postId, {
-        $push: { comment: comment2 }
-      }, {
-        new: true
-      }).populate("comment.postedBy", "_id name")
-    .then(result=>{
-        console.log(req.user.postId)
-        return res.status(201).json({
-            success:true,
-            result
-            
-        });
-    }).catch(err=>{
-        return res.status(422).json({
-            err,
-            message:"Nhi hua bhadwe"
-        })
-    })
+router.get("/comments", async (req,res)=>{
+    const comment = await Post.find({})
+    return  await res.json(comment)
 })
+router.get("/user", async (req,res)=>{
+    const comment = await User.find({})
+    return  await res.json(comment)
+})
+
+
+router.put("/comment", requireLogin, async (req, res) => {
+    try {
+      const userId = req.user._id; // Get the user's _id
+      const comment = {
+        text: req.body.text,
+        postedBy: userId // Assign the _id directly to the postedBy field
+      };
+  
+      const result = await Post.findByIdAndUpdate(
+        req.body.postId,
+        { $push: { comment } },
+        { new: true }
+      ).populate({
+        path: 'comment.postedBy',
+        select: 'name' // Only populate the name field
+      });
+  
+      return res.status(201).json({
+        success: true,
+        result,
+        comment
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(422).json({
+        success: false,
+        message: err.message
+      });
+    }
+  });
+  
+
 
 
 module.exports = router
